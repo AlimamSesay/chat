@@ -6,12 +6,14 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -49,7 +51,12 @@ public class RegisterActivity extends AppCompatActivity {
                 String email = mEmail.getEditText().getText().toString();
                 String password = mPassword.getEditText().getText().toString();
 
-                register_user(display_name, email, password);
+                // TODO
+                // Fix email is not showing as plain text
+
+                // Log.d("Input Values:........", "mEmail: " +  mEmail + " password: " +  password);
+
+                register_user(display_name, display_name, password);
 
             }
         });
@@ -70,6 +77,9 @@ public class RegisterActivity extends AppCompatActivity {
 
 
                 } else {
+                    String TAG = "FIREBASE_EXCEPTION";
+                    FirebaseException e = (FirebaseException)task.getException();
+                    Log.d(TAG, "Reason: " +  e.getMessage());
 
                     Toast.makeText(RegisterActivity.this, "Cannot Sign Up. Please check the form and try again.", Toast.LENGTH_LONG).show();
 
