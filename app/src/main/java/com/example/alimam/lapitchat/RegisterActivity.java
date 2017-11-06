@@ -1,5 +1,6 @@
 package com.example.alimam.lapitchat;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
@@ -28,6 +29,9 @@ public class RegisterActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
 
+    //ProgressDialog
+    private ProgressDialog mRegProgress;
+
     //Firebase Auth
     private FirebaseAuth mAuth;
 
@@ -41,6 +45,8 @@ public class RegisterActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Create Account");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mRegProgress = new ProgressDialog(this);
 
 
         // Firebase Auth
@@ -66,7 +72,16 @@ public class RegisterActivity extends AppCompatActivity {
 
                 // Log.d("Input Values:........", "mEmail: " +  mEmail + " password: " +  password);
 
-                register_user(display_name, display_name, password);
+                if(!TextUtils.isEmpty(display_name) || !TextUtils.isEmpty(email) || !TextUtils.isEmpty(password)){
+
+                    mRegProgress.setTitle("Registering User");
+                    mRegProgress.setMessage("Please wait while we create your account !");
+                    mRegProgress.setCanceledOnTouchOutside(false);
+                    mRegProgress.show();
+
+                    register_user(display_name, email, password);
+
+                }
 
             }
         });
@@ -90,6 +105,8 @@ public class RegisterActivity extends AppCompatActivity {
                     String TAG = "FIREBASE_EXCEPTION";
                     FirebaseException e = (FirebaseException)task.getException();
                     Log.d(TAG, "Reason: " +  e.getMessage());
+
+                    mRegProgress.hide();
 
                     Toast.makeText(RegisterActivity.this, "Cannot Sign Up. Please check the form and try again.", Toast.LENGTH_LONG).show();
 
