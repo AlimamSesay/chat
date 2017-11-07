@@ -1,5 +1,6 @@
 package com.example.alimam.lapitchat;
 
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -21,6 +22,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
+
+import org.w3c.dom.Text;
 
 import java.util.HashMap;
 
@@ -53,12 +57,17 @@ public class RegisterActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Create Account");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
         mRegProgress = new ProgressDialog(this);
+
 
 
         // Firebase Auth
 
         mAuth = FirebaseAuth.getInstance();
+
+
+        // Android Fields
 
         mDisplayName = (TextInputLayout) findViewById(R.id.register_display_name);
         mEmail = (TextInputLayout) findViewById(R.id.register_email);
@@ -74,11 +83,6 @@ public class RegisterActivity extends AppCompatActivity {
                 String email = mEmail.getEditText().getText().toString();
                 String password = mPassword.getEditText().getText().toString();
 
-                // TODO
-                // Fix email is not showing as plain text
-
-                // Log.d("Input Values:........", "mEmail: " +  mEmail + " password: " +  password);
-
                 if(!TextUtils.isEmpty(display_name) || !TextUtils.isEmpty(email) || !TextUtils.isEmpty(password)){
 
                     mRegProgress.setTitle("Registering User");
@@ -86,12 +90,18 @@ public class RegisterActivity extends AppCompatActivity {
                     mRegProgress.setCanceledOnTouchOutside(false);
                     mRegProgress.show();
 
-                    register_user(display_name, email, password);
+                    Log.d("Values:............", "email: " +  email + "password: " +  password + "display_name: " +  display_name);
+
+                    register_user(display_name, display_name, password);
 
                 }
 
+
+
             }
         });
+
+
     }
 
     private void register_user(final String display_name, String email, String password) {
@@ -101,19 +111,21 @@ public class RegisterActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
 
                 if(task.isSuccessful()){
+
+
                     FirebaseUser current_user = FirebaseAuth.getInstance().getCurrentUser();
                     String uid = current_user.getUid();
 
                     mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
 
-                    // String device_token = FirebaseInstanceId.getInstance().getToken();
+                    String device_token = FirebaseInstanceId.getInstance().getToken();
 
                     HashMap<String, String> userMap = new HashMap<>();
                     userMap.put("name", display_name);
                     userMap.put("status", "Hi there I'm using Lapit Chat App.");
                     userMap.put("image", "default");
                     userMap.put("thumb_image", "default");
-                    // userMap.put("device_token", device_token);
+                    userMap.put("device_token", device_token);
 
                     mDatabase.setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -134,15 +146,14 @@ public class RegisterActivity extends AppCompatActivity {
                     });
 
 
-
                 } else {
+
+                    mRegProgress.hide();
                     String TAG = "FIREBASE_EXCEPTION";
                     FirebaseException e = (FirebaseException)task.getException();
                     Log.d(TAG, "Reason: " +  e.getMessage());
 
-                    mRegProgress.hide();
-
-                    Toast.makeText(RegisterActivity.this, "Cannot Sign Up. Please check the form and try again.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(RegisterActivity.this, "Cannot Sign in. Please check the form and try again.", Toast.LENGTH_LONG).show();
 
                 }
 
