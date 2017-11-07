@@ -92,7 +92,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                     Log.d("Values:............", "email: " +  email + "password: " +  password + "display_name: " +  display_name);
 
-                    register_user(display_name, display_name, password);
+                    register_user(display_name, email, password);
 
                 }
 
