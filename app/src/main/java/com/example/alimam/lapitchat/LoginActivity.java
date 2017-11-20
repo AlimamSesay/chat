@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 //import com.google.firebase.database.DatabaseReference;
@@ -111,13 +113,21 @@ public class LoginActivity extends AppCompatActivity {
 
                     mLoginProgress.hide();
 
+                    String TAG = "FIREBASE_EXCEPTION";
+                    FirebaseException e = (FirebaseException)task.getException();
+                    Log.d(TAG, "Reason: " +  e.getMessage());
+
+                    if( e.getMessage() == "The email address is badly formatted."){
+                        Toast.makeText(LoginActivity.this, "The email address is badly formatted Please try again.", Toast.LENGTH_LONG).show();
+                    }
+
+                    Toast.makeText(LoginActivity.this, "Cannot Login. The email address is not exist.", Toast.LENGTH_LONG).show();
+
+
                     // String task_result = task.getException().getMessage().toString();
 
                     // Toast.makeText(LoginActivity.this, "Error : " + task_result, Toast.LENGTH_LONG).show();
-
-
-                    Toast.makeText(LoginActivity.this, "Cannot login. Please check the form and try again.", Toast.LENGTH_LONG).show();
-
+                    
                 }
 
             }

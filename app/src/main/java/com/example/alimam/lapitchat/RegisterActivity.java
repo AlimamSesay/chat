@@ -90,7 +90,7 @@ public class RegisterActivity extends AppCompatActivity {
                     mRegProgress.setCanceledOnTouchOutside(false);
                     mRegProgress.show();
 
-                    Log.d("Values:............", "email: " +  email + "password: " +  password + "display_name: " +  display_name);
+                    Log.d("Values:............", "email: " +  email + " password: " +  password + " display_name: " +  display_name);
 
                     register_user(display_name, email, password);
 
@@ -153,7 +153,11 @@ public class RegisterActivity extends AppCompatActivity {
                     FirebaseException e = (FirebaseException)task.getException();
                     Log.d(TAG, "Reason: " +  e.getMessage());
 
-                    Toast.makeText(RegisterActivity.this, "Cannot Sign in. Please check the form and try again.", Toast.LENGTH_LONG).show();
+                    if( e.getMessage() == "The email address is badly formatted."){
+                        Toast.makeText(RegisterActivity.this, "The email address is badly formatted Please try again.", Toast.LENGTH_LONG).show();
+                    }
+
+                    Toast.makeText(RegisterActivity.this, "Cannot Sign up. The email address may allready exist.", Toast.LENGTH_LONG).show();
 
                 }
 
