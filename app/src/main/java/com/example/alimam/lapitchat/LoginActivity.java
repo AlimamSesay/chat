@@ -68,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
                 String email = mLoginEmail.getEditText().getText().toString();
                 String password = mLoginPassword.getEditText().getText().toString();
 
-                if(!TextUtils.isEmpty(email) || !TextUtils.isEmpty(password)){
+                if(!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)){
 
                     mLoginProgress.setTitle("Logging In");
                     mLoginProgress.setMessage("Please wait while we check your credentials.");
@@ -77,6 +77,14 @@ public class LoginActivity extends AppCompatActivity {
 
                     loginUser(email, password);
 
+//                    if(email != null && !email.isEmpty() && !email.equals("null") && password != null && !password.isEmpty() && !password.equals("null")) {
+//                        ;
+//                    } else {
+//                        Toast.makeText(LoginActivity.this, "Please fill All filds", Toast.LENGTH_LONG).show();
+//                    }
+
+                }  else {
+                        Toast.makeText(LoginActivity.this, "Please fill All filds", Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -119,15 +127,17 @@ public class LoginActivity extends AppCompatActivity {
 
                     if( e.getMessage() == "The email address is badly formatted."){
                         Toast.makeText(LoginActivity.this, "The email address is badly formatted Please try again.", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Cannot Login. The email address is not exist.", Toast.LENGTH_LONG).show();
                     }
 
-                    Toast.makeText(LoginActivity.this, "Cannot Login. The email address is not exist.", Toast.LENGTH_LONG).show();
+
 
 
                     // String task_result = task.getException().getMessage().toString();
 
                     // Toast.makeText(LoginActivity.this, "Error : " + task_result, Toast.LENGTH_LONG).show();
-                    
+
                 }
 
             }
